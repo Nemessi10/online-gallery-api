@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { CloudinaryModule } from './claudinary/cloudinary.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { ImagesModule } from './images/images.module';
 
 @Module({
   imports: [
@@ -8,6 +9,7 @@ import { CloudinaryModule } from './claudinary/cloudinary.module';
       isGlobal: true,
     }),
     CloudinaryModule,
+    ImagesModule,
   ],
 })
 export class AppModule {}
