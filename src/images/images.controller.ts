@@ -3,6 +3,7 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
+  Get,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
@@ -15,9 +16,11 @@ export class ImagesController {
   @Post()
   @UseInterceptors(FileInterceptor('file', { storage: memoryStorage() }))
   async upload(@UploadedFile() file: Express.Multer.File) {
-    const result = await this.imagesService.uploadImage(file);
-    return {
-      url: result.secure_url,
-    };
+    return this.imagesService.uploadImage(file);
+  }
+
+  @Get()
+  async findAll() {
+    return this.imagesService.getAllImages();
   }
 }
