@@ -2,6 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 
+type CloudinaryDestroyResult = {
+  result: 'ok' | 'not found';
+};
+
 @Injectable()
 export class CloudinaryService {
   constructor(private readonly config: ConfigService) {
@@ -34,5 +38,15 @@ export class CloudinaryService {
       }
       uploadStream.end(buffer);
     });
+  }
+
+  async deleteImage(publicId: string): Promise<void> {
+    const result = (await cloudinary.uploader.destroy(
+      publicId,
+    )) as CloudinaryDestroyResult;
+
+    if (result.result !== 'ok') {
+      throw new Error('Cloudinary failed to delete image');
+    }
   }
 }

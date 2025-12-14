@@ -4,6 +4,10 @@ import {
   UploadedFile,
   UseInterceptors,
   Get,
+  Delete,
+  Param,
+  ParseIntPipe,
+  HttpCode,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
@@ -22,5 +26,11 @@ export class ImagesController {
   @Get()
   async findAll() {
     return this.imagesService.getAllImages();
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.imagesService.deleteImage(id);
   }
 }

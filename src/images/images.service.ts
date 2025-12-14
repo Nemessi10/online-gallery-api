@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Express } from 'express';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class ImagesService {
@@ -25,6 +26,22 @@ export class ImagesService {
   async getAllImages() {
     return this.prisma.image.findMany({
       orderBy: { uploadedAt: 'desc' },
+    });
+  }
+
+  async deleteImage(id: number): Promise<void> {
+    const image = await this.prisma.image.findUnique({
+      where: { id },
+    });
+
+    if (!image) {
+      throw new NotFoundException('Image not found');
+    }
+
+    await this.cloudinary.deleteImage(image.publicId);
+
+    await this.prisma.image.delete({
+      where: { id },
     });
   }
 }
