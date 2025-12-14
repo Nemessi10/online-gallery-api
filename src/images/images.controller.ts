@@ -8,10 +8,12 @@ import {
   Param,
   ParseIntPipe,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { ImagesService } from './images.service';
+import { PaginationDto } from './dto/pagination.dto';
 
 @Controller('images')
 export class ImagesController {
@@ -24,8 +26,8 @@ export class ImagesController {
   }
 
   @Get()
-  async findAll() {
-    return this.imagesService.getAllImages();
+  async findAll(@Query() pagination: PaginationDto) {
+    return this.imagesService.getAllImages(pagination);
   }
 
   @Delete(':id')
